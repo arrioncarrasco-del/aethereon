@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://ffr24521s2a3"]
+
+[ext_resource type="PackedScene" uid="uid://dp7fxksvpwhm6" path="res://scenes/player/player.tscn" id="1_hyk8p"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vom5j"]
+sky_top_color = Color(0.8086732, 0.8445591, 0.8927201, 1)
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_hyk8p"]
+sky_material = SubResource("ProceduralSkyMaterial_vom5j")
+
+[sub_resource type="Environment" id="Environment_iuonh"]
+background_mode = 2
+sky = SubResource("Sky_hyk8p")
+tonemap_mode = 2
+
+[node name="Main" type="Node3D" unique_id=1093454965]
+
+[node name="terreno" type="Node3D" parent="." unique_id=568723223]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="terreno" unique_id=1391265256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.58026123, 0.013700008, -10.448566)
+use_collision = true
+size = Vector3(13.40979, 0.58496094, 28.680061)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="terreno" unique_id=268205676]
+environment = SubResource("Environment_iuonh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="terreno" unique_id=996591666]
+transform = Transform3D(-0.86602527, -0.43301272, 0.25000003, -0.062934965, 0.59042585, 0.80463433, -0.4960234, 0.68110013, -0.5385754, 0, 3.3931923, -0.49511337)
+shadow_enabled = true
+
+[node name="Player" parent="." unique_id=697406004 instance=ExtResource("1_hyk8p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.30136085, 0)
