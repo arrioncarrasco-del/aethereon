@@ -1,43 +1,21 @@
 [gd_scene format=3 uid="uid://dp7fxksvpwhm6"]
 
 [ext_resource type="PackedScene" uid="uid://dn0qqvtopfi1u" path="res://scenes/player/player_model.tscn" id="1_8afob"]
-[ext_resource type="Script" uid="uid://x7y1h24dtta2" path="res://scenes/player/IdleState.gd" id="1_dovo2"]
-
-[sub_resource type="GDScript" id="GDScript_8afob"]
-script/source = "extends CharacterBody3D
-
-
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
-
-
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-
-	move_and_slide()
-"
+[ext_resource type="Script" uid="uid://dbv7hv735wt71" path="res://scripts/player/PlayerController.gd" id="1_gmlin"]
+[ext_resource type="Script" uid="uid://buom52q3wvj8e" path="res://scripts/player_states/StateMachine.gd" id="2_lvxji"]
+[ext_resource type="Script" uid="uid://dnwsors8t86qa" path="res://scripts/player_states/IdleState.gd" id="3_h17s1"]
+[ext_resource type="Script" uid="uid://blw7a7ov3nnwx" path="res://scripts/player_states/JumpState.gd" id="3_lvxji"]
+[ext_resource type="Script" uid="uid://bnv2xgev75jp4" path="res://scripts/player_states/WalkState.gd" id="4_p47bc"]
+[ext_resource type="Script" uid="uid://m00rw1c0162p" path="res://scripts/player_states/RunState.gd" id="5_75vfm"]
+[ext_resource type="Script" uid="uid://bpt0mnjn3h4rf" path="res://scripts/player_states/FallState.gd" id="6_0owmy"]
+[ext_resource type="Script" uid="uid://cwivallaq1gb8" path="res://scripts/player_states/CrouchState.gd" id="7_5gtgg"]
+[ext_resource type="Script" uid="uid://dsqydmcoejulq" path="res://scripts/player_states/LandState.gd" id="7_qek5x"]
+[ext_resource type="Script" uid="uid://dlrbdg30dsl8i" path="res://interaction/core/InteractionSystem.gd" id="11_je7p5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dovo2"]
 
 [node name="Player" type="CharacterBody3D" unique_id=697406004]
-script = SubResource("GDScript_8afob")
+script = ExtResource("1_gmlin")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=625186046]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -47,31 +25,43 @@ shape = SubResource("CapsuleShape3D_dovo2")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=1506774824]
 transform = Transform3D(1, 0, 0, 0, 0.9848077, 0.17364818, 0, -0.17364818, 0.9848077, 0, 0.04262042, 0)
+collision_mask = 0
 spring_length = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=545958555]
 transform = Transform3D(1, 0, 0, 0, 0.998751, 0.04996542, 0, -0.04996542, 0.998751, 0, 1.571, 2.036)
 current = true
 
+[node name="InteractionRay" type="RayCast3D" parent="CameraPivot/SpringArm3D/Camera3D" unique_id=200423454]
+target_position = Vector3(0, -3, 0)
+
 [node name="StateMachine" type="Node" parent="." unique_id=2005440501]
+script = ExtResource("2_lvxji")
 
 [node name="IdleState" type="Node" parent="StateMachine" unique_id=209603526]
-script = ExtResource("1_dovo2")
+script = ExtResource("3_h17s1")
 
 [node name="WalkState" type="Node" parent="StateMachine" unique_id=493367247]
+script = ExtResource("4_p47bc")
 
 [node name="RunState" type="Node" parent="StateMachine" unique_id=1919285409]
+script = ExtResource("5_75vfm")
 
 [node name="JumpState" type="Node" parent="StateMachine" unique_id=567422212]
+script = ExtResource("3_lvxji")
 
 [node name="FallState" type="Node" parent="StateMachine" unique_id=1653147395]
+script = ExtResource("6_0owmy")
 
 [node name="CrouchState" type="Node" parent="StateMachine" unique_id=430090391]
+script = ExtResource("7_5gtgg")
 
 [node name="LandState" type="Node" parent="StateMachine" unique_id=1469382469]
+script = ExtResource("7_qek5x")
 
 [node name="PlayerModel" type="Node3D" parent="." unique_id=2103521519]
 
 [node name="playerModel" parent="PlayerModel" unique_id=1562241766 instance=ExtResource("1_8afob")]
 
-[node name="AnimationController" type="Node" parent="PlayerModel" unique_id=137687005]
+[node name="InteractionSystem" type="Node" parent="." unique_id=1637330493]
+script = ExtResource("11_je7p5")

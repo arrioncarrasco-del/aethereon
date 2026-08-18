@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ffr24521s2a3"]
 
 [ext_resource type="PackedScene" uid="uid://dp7fxksvpwhm6" path="res://scenes/player/player.tscn" id="1_hyk8p"]
+[ext_resource type="Script" uid="uid://b3jxhncfug8h4" path="res://interaction/core/Interactable.gd" id="2_iuonh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vom5j"]
 sky_top_color = Color(0.8086732, 0.8445591, 0.8927201, 1)
@@ -14,6 +15,10 @@ sky_material = SubResource("ProceduralSkyMaterial_vom5j")
 background_mode = 2
 sky = SubResource("Sky_hyk8p")
 tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_iuonh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k2fmo"]
 
 [node name="Main" type="Node3D" unique_id=1093454965]
 
@@ -33,3 +38,14 @@ shadow_enabled = true
 
 [node name="Player" parent="." unique_id=697406004 instance=ExtResource("1_hyk8p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.30136085, 0)
+
+[node name="TestDoor" type="StaticBody3D" parent="." unique_id=2023384590]
+script = ExtResource("2_iuonh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestDoor" unique_id=524009835]
+transform = Transform3D(1.5, 0, 0, 0, 2.5, 0, 0, 0, 0.2, 0, 1.582331, -1.1037765)
+mesh = SubResource("BoxMesh_iuonh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestDoor" unique_id=2057334449]
+transform = Transform3D(1.5, 0, 0, 0, 2.5, 0, 0, 0, 0.2, 0, 1.5849075, -1.0729836)
+shape = SubResource("BoxShape3D_k2fmo")

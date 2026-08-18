@@ -12,3 +12,4 @@ func physics_update(_delta: float) -> void:
 	if player.is_on_floor():
 
 		state_machine.change_state("LandState")
+		return

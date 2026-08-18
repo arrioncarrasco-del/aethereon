@@ -11,20 +11,27 @@ func physics_update(_delta: float) -> void:
 
 	if not Input.is_action_pressed("crouch"):
 
-		var input := Input.get_vector(
-			"move_left",
-			"move_right",
-			"move_forward",
-			"move_backward"
-		)
+		_leave_crouch()
+		return
 
-		if input.length() > 0.01:
 
-			if Input.is_action_pressed("run"):
-				state_machine.change_state("RunState")
-			else:
-				state_machine.change_state("WalkState")
+func _leave_crouch() -> void:
 
-		else:
+	var input := Input.get_vector(
+		"move_left",
+		"move_right",
+		"move_forward",
+		"move_backward"
+	)
 
-			state_machine.change_state("IdleState")
+	if input.length() <= 0.01:
+
+		state_machine.change_state("IdleState")
+
+	elif Input.is_action_pressed("run"):
+
+		state_machine.change_state("RunState")
+
+	else:
+
+		state_machine.change_state("WalkState")

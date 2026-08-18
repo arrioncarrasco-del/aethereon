@@ -1,8 +1,10 @@
 class_name LandState
 extends PlayerState
 
+
+@export var landing_duration: float = 0.25
+
 var landing_timer: float = 0.0
-var landing_duration: float = 0.25
 
 
 func enter(_previous_state: PlayerState = null) -> void:
@@ -16,23 +18,29 @@ func physics_update(delta: float) -> void:
 
 	landing_timer += delta
 
-	if landing_timer >= landing_duration:
+	if landing_timer < landing_duration:
 
-		var input := Input.get_vector(
-			"move_left",
-			"move_right",
-			"move_forward",
-			"move_backward"
-		)
+		return
 
-		if input.length() <= 0.01:
 
-			state_machine.change_state("IdleState")
+	var input := Input.get_vector(
+		"move_left",
+		"move_right",
+		"move_forward",
+		"move_backward"
+	)
 
-		elif Input.is_action_pressed("run"):
 
-			state_machine.change_state("RunState")
+	if input.length() <= 0.01:
 
-		else:
+		state_machine.change_state("IdleState")
+		return
 
-			state_machine.change_state("WalkState")
+
+	if Input.is_action_pressed("run"):
+
+		state_machine.change_state("RunState")
+		return
+
+
+	state_machine.change_state("WalkState")

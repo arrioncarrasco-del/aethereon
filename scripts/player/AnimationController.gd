@@ -1,85 +1,170 @@
 class_name AnimationController
 extends Node
 
+
 @export var animation_player_path: NodePath
+
 
 var animation_player: AnimationPlayer
 
 
 func _ready() -> void:
+
 	_find_animation_player()
 
 
 func _find_animation_player() -> void:
 
 	if animation_player_path != NodePath():
-		animation_player = get_node_or_null(animation_player_path)
+
+		animation_player = get_node_or_null(
+			animation_player_path
+		)
 
 	if animation_player == null:
-		animation_player = _search_animation_player(self)
+
+		animation_player = _search_animation_player(
+			self
+		)
 
 	if animation_player == null:
-		push_error("AnimationController: No se encontró AnimationPlayer.")
+
+		push_error(
+			"AnimationController: No se encontró AnimationPlayer."
+		)
 
 
-func _search_animation_player(node: Node) -> AnimationPlayer:
+func _search_animation_player(
+	node: Node
+) -> AnimationPlayer:
 
 	for child in node.get_children():
 
 		if child is AnimationPlayer:
+
 			return child
 
-		var result := _search_animation_player(child)
+		var result := _search_animation_player(
+			child
+		)
 
 		if result != null:
+
 			return result
 
 	return null
 
 
-func play(animation_name: String, blend_time: float = 0.15) -> void:
+func play(
+	animation_name: String,
+	blend_time: float = 0.15
+) -> void:
 
 	if animation_player == null:
+
 		return
 
-	var animation := _find_animation(animation_name)
+	var animation := _find_animation(
+		animation_name
+	)
 
 	if animation == "":
+
 		push_warning(
 			"AnimationController: no existe la animación: "
 			+ animation_name
 		)
+
 		return
 
 	if animation_player.current_animation == animation:
+
 		return
 
-	animation_player.play(animation, blend_time)
+	animation_player.play(
+		animation,
+		blend_time
+	)
 
 
 func stop() -> void:
 
 	if animation_player != null:
+
 		animation_player.stop()
 
 
-func has_animation(animation_name: String) -> bool:
+func is_playing() -> bool:
 
 	if animation_player == null:
+
 		return false
 
-	return animation_player.has_animation(animation_name)
+	return animation_player.is_playing()
 
 
-func _find_animation(requested_name: String) -> String:
+func is_animation_finished() -> bool:
 
 	if animation_player == null:
+
+		return true
+
+	if not animation_player.is_playing():
+
+		return true
+
+	var current_animation := (
+		animation_player.current_animation
+	)
+
+	if current_animation == "":
+
+		return true
+
+	var animation := animation_player.get_animation(
+		current_animation
+	)
+
+	if animation == null:
+
+		return true
+
+	return (
+		animation_player.current_animation_position
+		>= animation.length - 0.01
+	)
+
+
+func has_animation(
+	animation_name: String
+) -> bool:
+
+	if animation_player == null:
+
+		return false
+
+	return animation_player.has_animation(
+		animation_name
+	)
+
+
+func _find_animation(
+	requested_name: String
+) -> String:
+
+	if animation_player == null:
+
 		return ""
 
-	if animation_player.has_animation(requested_name):
+	if animation_player.has_animation(
+		requested_name
+	):
+
 		return requested_name
 
+
 	var aliases := {
+
 		"idle": [
 			"idle",
 			"Idle",
@@ -103,16 +188,12 @@ func _find_animation(requested_name: String) -> String:
 
 		"fall": [
 			"fall",
-			"Fall",
-			"landing",
-			"Landing"
+			"landing"
 		],
 
 		"land": [
 			"land",
-			"Land",
-			"landing",
-			"Landing"
+			"Land"
 		],
 
 		"crouch": [
@@ -123,11 +204,16 @@ func _find_animation(requested_name: String) -> String:
 		]
 	}
 
+
 	if aliases.has(requested_name):
 
 		for candidate in aliases[requested_name]:
 
-			if animation_player.has_animation(candidate):
+			if animation_player.has_animation(
+				candidate
+			):
+
 				return candidate
+
 
 	return ""
