@@ -168,9 +168,11 @@ func _execute_interaction() -> void:
 	)
 
 	print(
-		"[INTERACTION] Resultado: ",
-		result
-	)
+	"[INTERACTION] Resultado: ",
+	InteractionResult.Status.keys()[result.status],
+	" | Mensaje: ",
+	result.message
+)
 
 	interaction_finished.emit(
 		result
