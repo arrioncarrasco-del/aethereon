@@ -33,7 +33,7 @@ transform = Transform3D(1, 0, 0, 0, 0.998751, 0.04996542, 0, -0.04996542, 0.9987
 current = true
 
 [node name="InteractionRay" type="RayCast3D" parent="CameraPivot/SpringArm3D/Camera3D" unique_id=200423454]
-target_position = Vector3(0, -3, 0)
+target_position = Vector3(0, 0, -3)
 
 [node name="StateMachine" type="Node" parent="." unique_id=2005440501]
 script = ExtResource("2_lvxji")
