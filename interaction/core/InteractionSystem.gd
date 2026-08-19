@@ -139,16 +139,25 @@ func _check_input() -> void:
 
 	if Input.is_action_just_pressed("interact"):
 
-		_execute_interaction()
+		print("[INTERACTION] E PRESIONADA")
 
+		_execute_interaction()
 
 func _execute_interaction() -> void:
 
 	if current_interactable == null:
 		return
 
+	print(
+		"[INTERACTION] Ejecutando: ",
+		current_interactable.get_interaction_name()
+	)
+
 	if not current_interactable.can_interact(player):
+		print("[INTERACTION] Interacción bloqueada")
 		return
+
+	print("[INTERACTION] Interacción iniciada")
 
 	interaction_started.emit(
 		current_interactable
@@ -156,6 +165,11 @@ func _execute_interaction() -> void:
 
 	var result := current_interactable.interact(
 		player
+	)
+
+	print(
+		"[INTERACTION] Resultado: ",
+		result
 	)
 
 	interaction_finished.emit(
