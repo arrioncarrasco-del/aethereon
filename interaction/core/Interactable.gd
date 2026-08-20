@@ -11,26 +11,23 @@ extends Node
 @export var enabled: bool = true
 
 
-func can_interact(_player: CharacterBody3D) -> bool:
-
+func can_interact(_interactor: CharacterBody3D) -> bool:
 	return enabled
 
 
 func get_interaction_name() -> String:
-
 	return interaction_name
 
 
 func get_interaction_description() -> String:
-
 	return interaction_description
 
 
 func interact(
-	_player: CharacterBody3D
+	_interactor: CharacterBody3D
 ) -> InteractionResult:
 
 	return InteractionResult.new(
 		InteractionResult.Status.SUCCESS,
-		"Interacción realizada."
+        "Interacción realizada."
 	)
